@@ -5,5 +5,3 @@ werkzeug
 flake8
 pylint
 bandit
-safety
-pytest
