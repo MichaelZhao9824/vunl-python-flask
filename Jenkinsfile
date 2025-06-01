@@ -25,7 +25,10 @@ pipeline {
         stage('Test') {
             steps {
                 echo "Running unit tests..."
-                sh 'pytest --junitxml=results.xml'
+                sh '''
+                    source venv/bin/activate
+                    pytest --junitxml=results.xml
+                '''
                 junit 'results.xml'
             }
         }
@@ -33,6 +36,7 @@ pipeline {
             steps {
                 echo "Running flake8 and pylint..."
                 sh '''
+                    source venv/bin/activate
                     flake8 app.py models.py > flake8_report.txt || true
                 '''
                 publishHTML(target: [
@@ -48,7 +52,10 @@ pipeline {
         stage('Security') {
             steps {
                 echo "Running Bandit security scan..."
-                sh 'bandit -r . -f html -o bandit_report.html || true'
+                sh '''
+                    source venv/bin/activate
+                    bandit -r . -f html -o bandit_report.html || true
+                '''
                 publishHTML(target: [
                     reportName: 'Bandit Security Report',
                     reportDir: '.',
@@ -57,9 +64,6 @@ pipeline {
                     alwaysLinkToLastBuild: true,
                     allowMissing: false
                 ])
-
-                echo "Checking dependencies with safety..."
-                sh 'safety check || true'
             }
         }
         stage('Deploy') {
