@@ -10,9 +10,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building Docker image..."
-                script {
-                    docker.build("${IMAGE}:latest")
-                }
+                sh 'docker build -t $IMAGE:latest .'
             }
         }
         stage('Test') {
@@ -90,7 +88,7 @@ pipeline {
     post {
         always {
             echo "Cleaning up..."
-            sh 'docker rm -f flask-app-test || true'
+            sh 'docker rm -f vunl-python-flask-test || true'
         }
     }
 }
