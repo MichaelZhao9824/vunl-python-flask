@@ -94,10 +94,4 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            echo "Cleaning up..."
-            sh 'docker rm -f vunl-python-flask-test || true'
-        }
-    }
 }
